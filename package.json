@@ -1,0 +1,19 @@
+{
+  "name": "web-scraper",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@fastify/cors": "^11.0.1",
+    "@fastify/static": "^8.2.0",
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.1",
+    "fastify": "^5.4.0",
+    "nodemon": "^3.1.10",
+    "playwright": "^1.54.1",
+    "playwright-extra": "^4.3.6",
+    "playwright-stealth": "^0.0.1",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "user-agents": "^1.1.616"
+  }
+}
