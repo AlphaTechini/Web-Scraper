@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import fastifyStatic from '@fastify/static';
 import fastifyCors from '@fastify/cors';
 import playwrightExtra from 'playwright-extra';
-import { scrapeSingleUrl, scrapePageLogic, scrapePaginatedLogic } from './scraper.js';
+import { scrapeSingleUrl, scrapeMultiplePages, scrapePageLogic, scrapePaginatedLogic } from './scraper.js';
 import { searchUrlsByKeyword } from './search.js';
 
 // Since we are using ES modules, we need to get __dirname manually
@@ -54,19 +54,28 @@ const startServer = async () => {
   // --- API Endpoint ---
   // This is the endpoint the Svelte app will call
   fastify.get('/api/scrape', async (request, reply) => {
-    // For a GET request, we can pass a URL in the query string, e.g., /api/scrape?url=...
-    const url = request.query?.url;
+    // I'll get the URL and an optional number of pages to scrape from the query string.
+    const { url, pagesToScrape = 1 } = request.query;
+    const numPages = parseInt(pagesToScrape, 10);
 
     try {
       // Log whether we're using a provided URL or the default from the .env file.
       if (url) {
-        fastify.log.info(`Scraping request received for: ${url}`);
+        fastify.log.info(`Scraping request received for: ${url}, pages: ${numPages}`);
       } else {
-        fastify.log.info(`Scraping request received. No URL provided, using default.`);
+        fastify.log.info(`Scraping request received. No URL provided, using default. pages: ${numPages}`);
       }
 
-      // Call the scraper. If 'url' is undefined, the default from scraper.js will be used.
-      const data = await scrapeSingleUrl(url);
+      let data;
+      const TIMEOUT_PER_PAGE = 200000; // 200 seconds, consistent with the search endpoint
+      // I'll use the existing logic to decide which function to call.
+      if (numPages > 1) {
+        // If more than one page is requested, I'll use the function built for that.
+        data = await withTimeout(scrapeMultiplePages(url, numPages), TIMEOUT_PER_PAGE * numPages);
+      } else {
+        // Otherwise, I'll use the original single URL scraper.
+        data = await withTimeout(scrapeSingleUrl(url), TIMEOUT_PER_PAGE);
+      }
       // Send the scraped data back to the Svelte app as JSON
       reply.send(data);
     } catch (error) {
