@@ -4,9 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Scraper</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <h1>Scraper Control Panel</h1>
-    <p>Your Svelte app will go here.</p>
+    <div class="container">
+        <h1>Scraper Control Panel</h1>
+    
+        <section class="scrape-card">
+            <h3>Single URL Scraping</h3>
+            <div class="form-group">
+                <label for="url">Website's URL</label>
+                <input type="text" id="url" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
+                <label for="pageNoSingle">Number of pages</label>
+                <input type="number" id="pageNoSingle" value="1" min="1">
+            </div>
+            <button type="submit" id="scrapeSingle">Scrape URL</button>
+        </section>
+    
+         <section class="scrape-card">
+            <h3>Keyword-based Scraping</h3>
+            <div class="form-group">
+                <label for="keyword">Search Keyword</label>
+                <input type="text" id="keyword" placeholder="e.g., AI training data">
+            </div>
+            <div class="form-group">
+                <label for="pageNoMulti">Number of pages</label>
+                <input type="number" id="pageNoMulti" value="1" min="1">
+            </div>
+            <button type="submit" id="scrapeMulti">Search & Scrape</button>
+        </section>
+    </div>
+
 </body>
 </html>
